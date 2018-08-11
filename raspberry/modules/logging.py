@@ -6,4 +6,4 @@ def log(msg):
     print(str(time.strftime("%H:%M:%S", time.localtime(time.time()))) + ": " + msg, file = logpad)
 
 def timestamp():
-    return time.strftime("%H:%M:%S", time.localtime(time.time())
+    return time.strftime("%H:%M:%S", time.localtime(time.time()))
