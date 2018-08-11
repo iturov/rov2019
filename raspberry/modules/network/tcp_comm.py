@@ -7,8 +7,14 @@ sys.path.insert(0,'..') # Go parent directory
 from logging import * # Import logging module
 from colors import * # Import colored print module
 
-# Data which is coming from groundstation.
-# [source_id, destination_id, timestamp, x, y, z, roll, pitch, yaw, temp, pressure, gripper]
+# Special commands
+# arm, disarm
+
+# Data format which is coming from ground station.
+# [source_id, destination_id, timestamp, gain, x, y, z, roll, pitch, yaw, gripper]
+
+# Data format which will send to ground station
+# [source_id, destination_id, timestamp, temp, pressure]
 
 class Client(object):
     def __init__(self, server_ip, port, buffer_size=1024):
@@ -16,13 +22,21 @@ class Client(object):
         self.server_ip = server_ip
         self.port = port
         self.buffer_size = buffer_size
+        self.send_data = ""
+        self.recv_data = ""
         info("Client IP: " + self.client_ip + "\n"
            + "Server IP: " + self.server_ip + "\n"
-           + "Port: " + self.port + "\n"
-           + "Buffer Size: " + self.buffer_size)
+           + "Port: " + str(self.port) + "\n"
+           + "Buffer Size: " + str(self.buffer_size))
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Create socket
         self.client_socket.settimeout(30) # 30 seconds timeout
         success("Socket created")
+
+    def getSocketInfo(self):
+        return("Client IP: " + self.client_ip + "\n"
+           + "Server IP: " + self.server_ip + "\n"
+           + "Port: " + str(self.port) + "\n"
+           + "Buffer Size: " + str(self.buffer_size))
 
     def connect(self):
         count = 0;
@@ -47,3 +61,29 @@ class Client(object):
                 error("ERROR: No Connection found")
                 log("ERROR: No Connection found")
                 break
+
+    def send(self, temp, pressure):
+        try:
+            self.send_data = str(["rov", "base", timestamp(), temp, pressure]) # Fill send_data format
+            packet = str.encode(self.send_data) # Encode string to bytes
+            self.client_socket.send(packet) # Send data to server
+            info("Sending Data: " + self.send_data)
+            log("Sending Data: " + self.send_data)
+        except:
+            error("Error occured while sending data")
+            log("Error occured while sending data")
+
+    def recv(self):
+        try:
+            self.recv_data = self.client_socket.recv(self.buffer_size) # Fill recv_data with coming data
+            info("Receiving Data: " + self.recv_data)
+            log("Receiving Data: " + self.recv_data)
+            return str(self.recv_data)
+        except:
+            error("Error occured while receiving data")
+            log("Error occured while receiving data")
+
+    def kill(self):
+        self.client_socket.close()
+        warn("Connection killed")
+        log("Connection killed")
