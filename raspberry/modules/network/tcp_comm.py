@@ -44,22 +44,18 @@ class Client(object):
             try:
                 count += 1
                 self.client_socket.connect((self.server_ip, self.port)) # Try to connect
-                success("Connection established")
-                log("Connection established to " + self.server_ip + ":" + self.port)
+                success("Connection established to " + self.server_ip + ":" + str(self.port))
                 break
             except TimeoutError:
                 if(count <= 3):
                     error("ERROR: Server is not responding")
-                    log("ERROR: Server is not responding")
                     wait("Trying to connect again...")
                     underline("Attempt: " + str(count))
                 else:
                     error("ERROR: Connection failed after 3 attempts")
-                    log("ERROR: Connection failed after 3 attempts")
                     break
             except OSError:
                 error("ERROR: No Connection found")
-                log("ERROR: No Connection found")
                 break
 
     def send(self, temp, pressure):
@@ -68,31 +64,24 @@ class Client(object):
             packet = str.encode(self.send_data) # Encode string to bytes
             self.client_socket.send(packet) # Send data to server
             info("Sending Data: " + self.send_data)
-            log("Sending Data: " + self.send_data)
         except:
             error("Error occured while sending data")
-            log("Error occured while sending data")
 
     def recv(self):
         try:
             self.recv_data = self.client_socket.recv(self.buffer_size) # Fill recv_data with coming data
             info("Receiving Data: " + self.recv_data)
-            log("Receiving Data: " + self.recv_data)
             return str(self.recv_data)
         except:
             error("Error occured while receiving data")
-            log("Error occured while receiving data")
 
     def failure(self):
         try:
             self.client_socket.send("failure")
             warn("Problem detected! ROV will disarm automatically")
-            log("Problem detected! ROV will disarm automatically")
         except:
             error("Fatal error")
-            log("Fatal error")
 
     def kill(self):
         self.client_socket.close()
         warn("Connection killed")
-        log("Connection killed")
