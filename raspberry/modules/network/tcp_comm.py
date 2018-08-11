@@ -43,7 +43,7 @@ class Client(object):
         while True:
             try:
                 count += 1
-                self.client_socket.connect((self.server_ip,self.port)) # Try to connect
+                self.client_socket.connect((self.server_ip, self.port)) # Try to connect
                 success("Connection established")
                 log("Connection established to " + self.server_ip + ":" + self.port)
                 break
@@ -82,6 +82,15 @@ class Client(object):
         except:
             error("Error occured while receiving data")
             log("Error occured while receiving data")
+
+    def failure(self):
+        try:
+            self.client_socket.send("failure")
+            warn("Problem detected! ROV will disarm automatically")
+            log("Problem detected! ROV will disarm automatically")
+        except:
+            error("Fatal error")
+            log("Fatal error")
 
     def kill(self):
         self.client_socket.close()
