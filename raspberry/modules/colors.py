@@ -12,7 +12,7 @@ def success(msg):
 def wait(msg):
     print("\033[95m" + msg + "\033[0m") # purple
 
-def hack(msg):
+def info(msg):
     print("\033[92m" + msg + "\033[0m") # green
 
 def bold(msg):
