@@ -16,7 +16,7 @@ from colors import * # Import colored print module
 # Data format which will send to ground station
 # [source_id, destination_id, timestamp, temp, pressure]
 
-class Client(object):
+class TCP(object):
     def __init__(self, server_ip, port, buffer_size=1024):
         self.client_ip = socket.gethostbyname(socket.gethostname()) # Get Host IP
         self.server_ip = server_ip
