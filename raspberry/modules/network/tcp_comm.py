@@ -48,14 +48,14 @@ class TCP(object):
                 break
             except TimeoutError:
                 if(count <= 3):
-                    error("ERROR: Server is not responding")
+                    error("Server is not responding")
                     wait("Trying to connect again...")
                     underline("Attempt: " + str(count))
                 else:
-                    error("ERROR: Connection failed after 3 attempts")
+                    error("Connection failed after 3 attempts")
                     break
             except OSError:
-                error("ERROR: No Connection found")
+                error("No Connection found")
                 break
 
     def send(self, temp, pressure):
