@@ -1,7 +1,7 @@
 # Communication with Ground station using TCP
 
 # Import modules
-import socket
+import socket # TCP communication package
 import sys
 sys.path.insert(0,'..') # Go parent directory
 from logging import * # Import logging module
@@ -17,15 +17,13 @@ from colors import * # Import colored print module
 # [source_id, destination_id, timestamp, temp, pressure]
 
 class TCP(object):
-    def __init__(self, server_ip, port, buffer_size=1024):
+    def __init__(self, port, buffer_size=1024):
         self.client_ip = socket.gethostbyname(socket.gethostname()) # Get Host IP
-        self.server_ip = server_ip
         self.port = port
         self.buffer_size = buffer_size
         self.send_data = ""
         self.recv_data = ""
         info("Client IP: " + self.client_ip + "\n"
-           + "Server IP: " + self.server_ip + "\n"
            + "Port: " + str(self.port) + "\n"
            + "Buffer Size: " + str(self.buffer_size))
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Create socket
@@ -38,7 +36,8 @@ class TCP(object):
            + "Port: " + str(self.port) + "\n"
            + "Buffer Size: " + str(self.buffer_size))
 
-    def connect(self):
+    def connect(self, server_ip):
+        self.server_ip = server_ip
         count = 0;
         while True:
             try:
