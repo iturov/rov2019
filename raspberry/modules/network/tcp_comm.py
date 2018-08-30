@@ -8,13 +8,15 @@ from logging import * # Import logging module
 from colors import * # Import colored print module
 
 class TCP(object):
-    def __init__(self, port, buffer_size=4096):
+    def __init__(self, server_ip, port, buffer_size=4096):
         self.client_ip = socket.gethostbyname(socket.gethostname()) # Get Host IP
+        self.server_ip = server_ip
         self.port = port
         self.buffer_size = buffer_size # bits
         self.send_data = ""
         self.recv_data = ""
         info("Client IP: " + self.client_ip + "\n"
+           + "Server IP: " + self.server_ip + "\n"
            + "Port: " + str(self.port) + "\n"
            + "Buffer Size: " + str(self.buffer_size))
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Create socket
@@ -27,14 +29,13 @@ class TCP(object):
                 "Port" : self.port,
                 "Buffer Size" : self.buffer_size}
 
-    def connect(self, server_ip):
-        self.server_ip = server_ip
+    def connect(self):
         count = 0;
         while True:
             try:
                 count += 1
                 self.client_socket.connect((self.server_ip, self.port)) # Try to connect
-                success("Connection established to " + self.server_ip + ":" + str(self.port))
+                success("TCP connection established to " + self.server_ip + ":" + str(self.port))
                 break
             except TimeoutError:
                 if(count <= 3):
@@ -50,7 +51,7 @@ class TCP(object):
 
     def send(self, temp, pressure):
         try:
-            self.send_data = str(["rov", "base", timestamp(), temp, pressure]) # Fill send_data format
+            self.send_data = "rov" + "-" + "base" + "-" + str(timestamp()) + "-" + str(temp) + "-" +  str(pressure) # Fill send_data format
             packet = str.encode(self.send_data) # Encode string to bytes
             self.client_socket.sendall(packet) # Send data to base
             info("Sending Data to base: " + self.send_data)
@@ -71,6 +72,13 @@ class TCP(object):
             error(bold("FAILURE: ROV will disarm automatically\t") + underline(problem))
         except:
             error("Fatal error")
+
+    def send_info(self, type, info): # Leak detected, Motor down, Crashed...
+        try:
+            self.client_socket.sendall(str.encode(info))
+            success(bold(underline("Send " + type + " info")))
+        except:
+            error("Cannot send " + type + "info")
 
     def kill(self):
         reset_terminal()

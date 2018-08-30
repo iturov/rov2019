@@ -2,15 +2,10 @@
 
 # Import modules
 import serial # Serial communication package
+import sys
 sys.path.insert(0,'..') # Go parent directory
 from logging import * # Import logging module
 from colors import * # Import colored print module
-
-# Data format which is coming from raspberry pi
-# [gain, x, y, z, roll, pitch, yaw, gripper]
-
-# Data format which will send to raspberry pi
-# [rov_state, temp, pressure, leak_info]
 
 class Serial(object):
     def __init__(self,port,baudrate=115200,read_timeout=5.0, write_timeout=5.0, buffer_size=4):
@@ -43,7 +38,7 @@ class Serial(object):
                                               bytesize=serial.EIGHTBITS,
                                               timeout=self.timeout
                                               write_timeout=self.write_timeout)
-                success("Connection established")
+                success("Serial connection established to STM32")
                 break
             except SerialException:
                 if(count <= 3):
@@ -56,7 +51,7 @@ class Serial(object):
 
     def send(self, gain, x, y, z, roll, pitch, yaw, gripper):
         try:
-            self.send_data = str(["rov", "stm", timestamp(), gain, x, y, z, roll, pitch, yaw, gripper]) # Fill send_data format
+            self.send_data = str(x) + "-" + str(y) + "-" + str(z) + "-" + str(roll) + "-" + str(pitch) + "-" + str(yaw) + "-" + str(gripper) # Fill send_data format
             packet = str.encode(self.send_data) # Encode string to bytes
             self.server_serial.write(packet) # Send data to stm
             info("Sending Data to stm: " + self.send_data)
@@ -81,9 +76,20 @@ class Serial(object):
                 info("Serial Connection terminated")
 
     def arm(self):
-        self.server_serial.write(str.encode("ARM"))
-        success(bold(underline("Armed")))
-
+        try:
+            self.server_serial.write(str.encode("ARM"))
+            success(bold(underline("Armed")))
+        except:
+            error("Cannot armed")
     def disarm(self):
-        self.server_serial.write(str.encode("DISARM"))
-        success(bold(underline("Disarmed")))
+        try:
+            self.server_serial.write(str.encode("DISARM"))
+            success(bold(underline("Disarmed")))
+        except:
+            error("Cannot disarmed")
+    def set_gain(self,value):
+        try:
+            self.server_serial.write(str.encode("GAIN: " + str(value)))
+            success(bold(underline("Gain set: " str(value))))
+        except:
+            error("Cannot set gain")
