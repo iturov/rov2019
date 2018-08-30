@@ -8,7 +8,7 @@ from logging import * # Import logging module
 from colors import * # Import colored print module
 
 # Special commands
-# arm, disarm
+# arm, disarm, leak_detected ...
 
 # Data format which is coming from ground station.
 # [source_id, destination_id, timestamp, gain, x, y, z, roll, pitch, yaw, gripper]
@@ -82,5 +82,10 @@ class TCP(object):
             error("Fatal error")
 
     def kill(self):
-        self.client_socket.close()
-        warn("Connection killed")
+        reset_terminal()
+        # TODO: Ask this to the ground station.
+        warn("TCP connection will be terminated. Would you like to proceed? [Yes/No]:\t")
+        answer = input()
+        if(answer.lower().startswith("y"))
+            self.client_socket.close()
+            info("Connection terminated")
