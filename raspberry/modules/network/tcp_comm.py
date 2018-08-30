@@ -7,15 +7,6 @@ sys.path.insert(0,'..') # Go parent directory
 from logging import * # Import logging module
 from colors import * # Import colored print module
 
-# Special commands
-# arm, disarm, leak_detected ...
-
-# Data format which is coming from ground station.
-# [source_id, destination_id, timestamp, gain, x, y, z, roll, pitch, yaw, gripper]
-
-# Data format which will send to ground station
-# [source_id, destination_id, timestamp, temp, pressure]
-
 class TCP(object):
     def __init__(self, port, buffer_size=1024):
         self.client_ip = socket.gethostbyname(socket.gethostname()) # Get Host IP
