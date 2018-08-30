@@ -8,10 +8,10 @@ from logging import * # Import logging module
 from colors import * # Import colored print module
 
 class TCP(object):
-    def __init__(self, port, buffer_size=1024):
+    def __init__(self, port, buffer_size=4096):
         self.client_ip = socket.gethostbyname(socket.gethostname()) # Get Host IP
         self.port = port
-        self.buffer_size = buffer_size
+        self.buffer_size = buffer_size # bits
         self.send_data = ""
         self.recv_data = ""
         info("Client IP: " + self.client_ip + "\n"
@@ -52,31 +52,30 @@ class TCP(object):
         try:
             self.send_data = str(["rov", "base", timestamp(), temp, pressure]) # Fill send_data format
             packet = str.encode(self.send_data) # Encode string to bytes
-            self.client_socket.send(packet) # Send data to server
-            info("Sending Data: " + self.send_data)
+            self.client_socket.sendall(packet) # Send data to base
+            info("Sending Data to base: " + self.send_data)
         except:
             error("Error occured while sending data")
 
     def recv(self):
         try:
             self.recv_data = self.client_socket.recv(self.buffer_size) # Fill recv_data with coming data
-            info("Receiving Data: " + self.recv_data)
+            info("Receiving Data from base: " + self.recv_data)
             return str(self.recv_data)
         except:
             error("Error occured while receiving data")
 
-    def failure(self):
+    def failure(self, problem): # Leak detected, Motor down, Crashed...
         try:
-            self.client_socket.send("failure")
-            warn("Problem detected! ROV will disarm automatically")
+            self.client_socket.sendall(str.encode("FAILURE: " + problem))
+            error(bold("FAILURE: ROV will disarm automatically\t") + underline(problem))
         except:
             error("Fatal error")
 
     def kill(self):
         reset_terminal()
-        # TODO: Ask this to the ground station.
         warn("TCP connection will be terminated. Would you like to proceed? [Yes/No]:\t")
         answer = input()
         if(answer.lower().startswith("y"))
             self.client_socket.close()
-            info("Connection terminated")
+            info("TCP Connection terminated")
