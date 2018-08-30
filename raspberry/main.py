@@ -1,3 +1,18 @@
+# Special commands
+# arm, disarm, failure...
+
+# Data format which is coming from ground station and sending to STM32.
+# [source_id, destination_id, timestamp, gain, x, y, z, roll, pitch, yaw, gripper]
+
+# Data format which will receive from STM32 and send to ground station
+# [source_id, destination_id, timestamp, temp, pressure]
+
+# IDs: "base" - "rov" - "stm"
+
+# Import modules
+from network.serial_comm import *
+from network.tcp_comm import *
+
 # There will be 2 threads working simultaneously
 
 # loop1
