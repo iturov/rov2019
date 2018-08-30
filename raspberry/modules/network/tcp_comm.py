@@ -30,11 +30,11 @@ class TCP(object):
         self.client_socket.settimeout(30) # 30 seconds timeout
         success("Socket created")
 
-    def getSocketInfo(self):
-        return("Client IP: " + self.client_ip + "\n"
-           + "Server IP: " + self.server_ip + "\n"
-           + "Port: " + str(self.port) + "\n"
-           + "Buffer Size: " + str(self.buffer_size))
+    def getSocketInfo(self): # Return dictionary
+        return {"Client IP" : self.client_ip,
+                "Server IP" : self.server_ip,
+                "Port" : self.port,
+                "Buffer Size" : self.buffer_size}
 
     def connect(self, server_ip):
         self.server_ip = server_ip

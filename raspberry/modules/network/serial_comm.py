@@ -13,16 +13,22 @@ from colors import * # Import colored print module
 # [rov_state, temp, pressure, leak_info]
 
 class Serial(object):
-    def __init__(self,port,baudrate=9600,timeout=1):
+    def __init__(self,port,baudrate=115200,read_timeout=5.0, write_timeout=5.0):
         self.port = port
         self.baudrate = baudrate
-        self.timeout = timeout
+        self.read_timeout = read_timeout # seconds
+        self.write_timeout = write_timeout # seconds
         self.send_data = ""
         self.recv_data = ""
         info("Port: " + self.port + "\n"
-           + "Baudrate: " + str(self.baudrate) + "\n"
-           + "Timeout: " + str(self.timeout))
+           + "Baudrate: " + str(self.baudrate))
         success("Serial connection created")
+
+    def getSerialInfo(self):
+        return {"Port" : self.port,
+                "Baudrate" : self.baudrate,
+                "Read Timeout" : self.read_timeout,
+                "Write Timeout" : self.write_timeout}
 
     def connect(self):
         count = 0;
@@ -34,7 +40,8 @@ class Serial(object):
                                               parity=serial.PARITY_NONE,
                                               stopbits=serial.STOPBITS_ONE,
                                               bytesize=serial.EIGHTBITS,
-                                              timeout=self.timeout)
+                                              timeout=self.timeout
+                                              write_timeout=self.write_timeout)
                 success("Connection established")
                 break
             except: # Probably TimeoutError
@@ -45,3 +52,5 @@ class Serial(object):
                 else:
                     error("Connection failed after 3 attempts")
                     break
+
+    def recv(self):
