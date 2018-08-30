@@ -1,4 +1,6 @@
 # Colored print functions
+# TODO: Send all these printings to the groundstation. And print these on the groundstation console sync.
+
 from logging import *
 
 def error(msg):
@@ -28,3 +30,6 @@ def bold(msg):
 def underline(msg):
     print("\033[4m" + msg + "\033[0m") # underline
     log(msg)
+
+def reset_terminal():
+    print("\x1b[2J")
