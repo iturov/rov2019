@@ -1,9 +1,12 @@
 import time
 
-logpad = open("log.txt", "w") # Open a document
+logpad = open("log.txt", "a") # Open a document
 
-def log(msg):
-    print(str(time.strftime("%H:%M:%S", time.localtime(time.time()))) + ": " + msg, file = logpad)
+def datetime():
+    return time.strftime("%H:%M:%S", time.localtime(time.time()))
 
 def timestamp():
-    return time.strftime("%H:%M:%S", time.localtime(time.time()))
+    return time.time()
+
+def log(msg):
+    print(str(datetime()) + ": " + msg, file = logpad)
