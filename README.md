@@ -4,14 +4,14 @@
 #### Branches:
 
 * ~~raspberry-TCP~~
-    - TCP ile verileri ground station'a yollayacak modül
+    - ~~TCP ile verileri ground station'a yollayacak modül~~
 * ~~raspberry-serial~~
-    - serial ile STM32'ye verileri aktaracak modül
+    - ~~serial ile STM32'ye verileri aktaracak modül~~
 * ~~raspberry-main~~
-    - genel raspberry sistem yapısı
+    - ~~genel raspberry sistem yapısı~~
 * [raspberry-extras](https://github.com/iturov/rov2019/tree/raspberry-extras "raspberry-extras")
     - raspberry üzerindeki geliştirmeler
-    - tüm exceptionları tek bir modülde toparlanacak
+    - ~~tüm exceptionları tek bir modülde toparlanacak~~
     - start.sh script'i yazılacak
 * [joystick](https://github.com/iturov/rov2019/tree/joystick "joystick")
     - pygame.joystick ile değerler elde edilecek
