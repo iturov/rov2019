@@ -6,6 +6,7 @@ import sys
 sys.path.insert(0,'..') # Go parent directory
 from logging import * # Import logging module
 from colors import * # Import colored print module
+import exceptions
 
 class Serial(object):
     def __init__(self,port,baudrate=115200,read_timeout=5.0, write_timeout=5.0, buffer_size=4):
@@ -42,11 +43,11 @@ class Serial(object):
                 break
             except SerialException:
                 if(count <= 3):
-                    error("Port is not responding")
+                    error(exceptions.port)
                     wait("Trying to connect again...")
                     underline("Attempt: " + str(count))
                 else:
-                    error("Connection failed after 3 attempts")
+                    error(exceptions.attempts)
                     break
 
     def send(self, gain, x, y, z, roll, pitch, yaw, gripper):
@@ -56,7 +57,7 @@ class Serial(object):
             self.server_serial.write(packet) # Send data to stm
             info("Sending Data to stm: " + self.send_data)
         except: # SerialTimeoutException
-            error("Error occured while sending data")
+            error(exceptions.send)
 
     def recv(self):
         try:
@@ -64,7 +65,7 @@ class Serial(object):
             info("Receiving Data from base: " + self.recv_data)
             return str(self.recv_data)
         except:
-            error("Error occured while receiving data")
+            error(exceptions.recv)
 
     def kill(self):
         reset_terminal()
@@ -80,16 +81,16 @@ class Serial(object):
             self.server_serial.write(str.encode("ARM"))
             success(bold(underline("Armed")))
         except:
-            error("Cannot armed")
+            error(exceptions.arm)
     def disarm(self):
         try:
             self.server_serial.write(str.encode("DISARM"))
             success(bold(underline("Disarmed")))
         except:
-            error("Cannot disarmed")
+            error(exceptions.arm)
     def set_gain(self,value):
         try:
             self.server_serial.write(str.encode("GAIN: " + str(value)))
             success(bold(underline("Gain set: " str(value))))
         except:
-            error("Cannot set gain")
+            error(exceptions.gain)

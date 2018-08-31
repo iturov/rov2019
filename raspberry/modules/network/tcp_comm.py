@@ -6,6 +6,7 @@ import sys
 sys.path.insert(0,'..') # Go parent directory
 from logging import * # Import logging module
 from colors import * # Import colored print module
+import exceptions
 
 class TCP(object):
     def __init__(self, server_ip, port, buffer_size=4096):
@@ -39,14 +40,14 @@ class TCP(object):
                 break
             except TimeoutError:
                 if(count <= 3):
-                    error("Server is not responding")
+                    error(exceptions.server)
                     wait("Trying to connect again...")
                     underline("Attempt: " + str(count))
                 else:
-                    error("Connection failed after 3 attempts")
+                    error(exceptions.attempts)
                     break
             except OSError:
-                error("No Connection found")
+                error(exceptions.no_connect)
                 break
 
     def send(self, temp, pressure):
@@ -56,7 +57,7 @@ class TCP(object):
             self.client_socket.sendall(packet) # Send data to base
             info("Sending Data to base: " + self.send_data)
         except:
-            error("Error occured while sending data")
+            error(exceptions.send)
 
     def recv(self):
         try:
@@ -64,14 +65,14 @@ class TCP(object):
             info("Receiving Data from base: " + self.recv_data)
             return str(self.recv_data)
         except:
-            error("Error occured while receiving data")
+            error(exceptions.recv)
 
     def failure(self, problem): # Leak detected, Motor down, Crashed...
         try:
             self.client_socket.sendall(str.encode("FAILURE: " + problem))
             error(bold("FAILURE: ROV will disarm automatically\t") + underline(problem))
         except:
-            error("Fatal error")
+            error(exceptions.fatal)
 
     def send_info(self, type, info): # Leak detected, Motor down, Crashed...
         try:
