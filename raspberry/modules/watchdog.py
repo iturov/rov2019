@@ -1,19 +1,15 @@
 from logging import * # Import logging module
 from colors import * # Import colored print module
-import subprocess
+import os
 import exceptions
 
-def checkBaseState(ip_address):
-    text = str(subprocess.Popen(["/bin/ping", "-c1", ip_address], stdout=subprocess.PIPE).stdout.read())
-    start_index = text.find("time=") + 5
-    stop_index = text.find("ms") + 2
-    ping = text[start_index:stop_index]
-    if(ping.find("error") =! -1):
+def checkBaseState(host):
+    state = os.system('ping {} {} > /dev/null'.format("-c 1", host)) == 0
+    if(state):
+        return state
+    else:
         error(exceptions.tcp_fail)
         exit()
-    else:
-        return ping
-
 def checkStmState(port):
     try:
         test_connection = serial.Serial(port)
