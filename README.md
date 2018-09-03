@@ -16,8 +16,8 @@
 * [joystick](https://github.com/iturov/rov2019/tree/joystick "joystick")
     - pygame.joystick ile değerler elde edilecek
     - TCP ile değerler rov'a yollanacak
-* [camera](https://github.com/iturov/rov2019/tree/camera "camera")
-    - raspberry'de gstreamer ile görüntü ground station'a yollanacak
+* ~~[camera](https://github.com/iturov/rov2019/tree/camera "camera")~~
+    - ~~raspberry'de gstreamer ile görüntü ground station'a yollanacak~~
 * [GUI](https://github.com/iturov/rov2019/tree/GUI "GUI")
     - Kivy ile arayüz tasarlanacak
     - gstreamer'dan camera görüntüsü alınacak
