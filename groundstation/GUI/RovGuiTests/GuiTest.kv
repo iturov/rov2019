@@ -1,0 +1,219 @@
+<Widget>:
+    font_name: 'Roboto-Condensed.ttf'
+<myGui>:
+    rows: 2
+    spacing: 5
+    canvas:
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            source: 'bg1.png'
+
+
+    RelativeLayout:
+        id: relative
+        spacing: 5
+        cols:2
+        AnchorLayout:
+            pos_hint:{"x":0.0035,"y":0.9}
+            size_hint : 0.025,0.08
+            anchor_x : 'center'
+            anchor_y : 'center'
+            Button:
+                text: "**"
+                text_color: 1,1,1,1
+                background_color: 0.45,0.45,0.45,0.9
+        AnchorLayout:
+            pos_hint:{"x":0.0035,"y":0.7}
+            size_hint : 0.025,0.08
+            anchor_x : 'center'
+            anchor_y : 'center'
+            Button:
+                text: "**"
+                text_color: 1,1,1,1
+                background_color: 0.45,0.45,0.45,0.9
+        AnchorLayout:
+            pos_hint:{"x":0.0035,"y":0.5}
+            size_hint : 0.025,0.08
+            anchor_x : 'center'
+            anchor_y : 'center'
+            Button:
+                text: "**"
+                text_color: 1,1,1,1
+                background_color: 0.45,0.45,0.45,0.9
+        AnchorLayout:
+            pos_hint:{"x":0.0035,"y":0.3}
+            size_hint : 0.025,0.08
+            anchor_x : 'center'
+            anchor_y : 'center'
+            Button:
+                text: "**"
+                text_color: 1,1,1,1
+                background_color: 0.45,0.45,0.45,0.9
+        AnchorLayout:
+            pos_hint:{"x":0.0035,"y":0.1}
+            size_hint : 0.025,0.08
+            anchor_x : 'center'
+            anchor_y : 'center'
+            Button:
+                text: "**"
+                text_color: 1,1,1,1
+                background_color: 0.45,0.45,0.45,0.9
+        AnchorLayout:
+            pos_hint:{"x":0.0035,"y":0.8}
+            size_hint : 0.025,0.08
+            anchor_x : 'center'
+            anchor_y : 'center'
+            Button:
+                text: "<<"
+                text_color: 0,0,0,1
+                background_color: 0.95,0.95,0.95,0.4
+        AnchorLayout:
+            pos_hint:{"x":0.0035,"y":0.6}
+            size_hint : 0.025,0.08
+            anchor_x : 'center'
+            anchor_y : 'center'
+            Button:
+                text: "<<"
+                text_color: 0,0,0,1
+                background_color: 0.95,0.95,0.95,0.4
+        AnchorLayout:
+            pos_hint:{"x":0.0035,"y":0.4}
+            size_hint : 0.025,0.08
+            anchor_x : 'center'
+            anchor_y : 'center'
+            Button:
+                text: "<<"
+                text_color: 0,0,0,1
+                background_color: 0.95,0.95,0.95,0.4
+        AnchorLayout:
+            pos_hint:{"x":0.0035,"y":0.2}
+            size_hint : 0.025,0.08
+            anchor_x : 'center'
+            anchor_y : 'center'
+            Button:
+                text: "<<"
+                text_color: 0,0,0,1
+                background_color: 0.95,0.95,0.95,0.4
+        AnchorLayout:
+            pos_hint:{"x":0.0035,"y":0}
+            size_hint : 0.025,0.08
+            anchor_x : 'center'
+            anchor_y : 'center'
+            Button:
+                text: "<<"
+                text_color: 0,0,0,1
+                background_color: 0.95,0.95,0.95,.4
+        Camera:
+            pos_hint:{"x":-0.05,"y":0}
+            id: Cam0
+            resolution: (1366,768)
+            play: True
+
+        AnchorLayout:
+            canvas:
+                Color:
+                    rgba:  0.95,0.95,0.95,.1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            pos_hint:{"x":0.867,"y":0.65}
+            size_hint : 0.13,0.08
+            anchor_x : 'center'
+            anchor_y : 'center'
+            Label:
+                text: "Teknofest Uzaktan Kontrollu \n    Su Alti Araci Yarismasi"
+                font_name: 'Roboto-BlackItalic.ttf'
+        BoxLayout:
+            padding : 5
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgba:  0.95,0.95,0.95,.1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            pos_hint:{"x":0.867,"y":0.45}
+            size_hint : 0.13,0.09
+            rows:2
+            Label:
+                text: "Sicaklik (Celsius)"
+                font_name: 'Roboto-BoldCondensedItalic.ttf'
+                size_hint_y: 0.02
+            Label:
+                text: root.tempLabel
+                font_name: 'Roboto-Black.ttf'
+                size_hint_y: 0.06
+                font_size: 24
+        BoxLayout:
+            padding : 5
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgba:  0.95,0.95,0.95,.1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            pos_hint:{"x":0.867,"y":0.2}
+            size_hint : 0.13,0.09
+            rows:2
+            Label:
+                text: "Basinc (Bar)"
+                font_name: 'Roboto-BoldCondensedItalic.ttf'
+                size_hint_y: 0.02
+            Label:
+                text: root.barLabel
+                font_name: 'Roboto-Black.ttf'
+                size_hint_y: 0.06
+                font_size: 24
+
+        AnchorLayout:
+            id:anchor1
+            canvas:
+                Rectangle:
+                    source: 'calibra.png'
+                    size:self.size
+                    pos:self.pos
+            size_hint: 0.13, 0.23
+            pos_hint:{"x":0.87,"y":0.75}
+            Button:
+                id:cursorButton
+                canvas.before:
+                    PushMatrix
+                    Rotate:
+                        angle: app.angle
+                        origin: self.center
+                canvas.after:
+                    PopMatrix
+                background_color: 0, 0, 0, 0
+                size_hint: 0.9,0.02
+                Image:
+                    source: "cursor.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+
+    ScrollView:
+        size_hint: 1,0.1
+        GridLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height : self.minimum_height
+            row_default_height : 30
+            cols: 1
+            canvas:
+                Color:
+                    rgba: 0.1,0.1,0.1,0.5
+                Rectangle:
+                    pos : self.pos
+                    size : self.size
+            Label:
+                text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Vestibulum dui urna, cursus ac nulla quis, bibendum venenatis leo.'
+                size_hint_y:
+            Label:
+                text: 'In magna enim, efficitur quis nulla quis, maximus dictum metus. Phasellus bibendum nisi ac enim hendrerit pretium.'
+            Label:
+                text: 'Duis ac nisi et risus aliquet consequat sit amet nec justo. Donec ut nisl vehicula, eleifend massa ut, posuere justo.'
+            Label:
+                text: 'Curabitur congue neque quis bibendum convallis. Aenean sagittis efficitur lorem, non ultrices mauris consequat sit amet.'
+            Label:
+                text: '.Pellentesque a metus eget elit ullamcorper consectetur a non odio. Mauris sagittis quam eu purus scelerisque, at porttitor lectus bibendum.'
