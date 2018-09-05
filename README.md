@@ -13,8 +13,8 @@
     - raspberry üzerindeki geliştirmeler
     - ~~tüm exceptionları tek bir modülde toparlanacak~~
     - start.sh script'i yazılacak
-* [joystick](https://github.com/iturov/rov2019/tree/joystick "joystick")
-    - pygame.joystick ile değerler elde edilecek
+* ~~[joystick](https://github.com/iturov/rov2019/tree/joystick "joystick")~~
+    - ~~pygame.joystick ile değerler elde edilecek~~
     - TCP ile değerler rov'a yollanacak
 * ~~[camera](https://github.com/iturov/rov2019/tree/camera "camera")~~
     - ~~raspberry'de gstreamer ile görüntü ground station'a yollanacak~~
