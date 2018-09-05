@@ -1,0 +1,3 @@
+[submodule "groundstation/modules/ps4controller"]
+	path = groundstation/modules/ps4controller
+	url = https://github.com/senceryazici/ps4controller.git
