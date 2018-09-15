@@ -5,27 +5,26 @@ from kivy.core.window import Window
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
 from kivy.clock import Clock
+from pymavlink import mavutil
 
 Window.clearcolor = (.15, .15, .15, 1)
 Window.size = (1366, 768)
-#Window.fullscreen = 'auto'
+# Window.fullscreen = 'auto'
 
-class Axis():
+
+class Axis(object):
     def __init__(self):
         self.axis = {
             "X": 0,
-            "Y": 0
+            "Y": 0,
         }
         self.dead_zone = 1.0
 
-
-    def updateAxis(self, axis, value, invert=False, range=32767., offset=0):
-        self.axis[axis] = value * 100.0 / range + offset
-        if invert:
-            self.axis[axis] *= -1
+    def updateAxis(self, axis, value, range=32767.0, offset=0):
+        self.axis[axis] = value * 1000.0 / range + offset
 
         if abs(self.axis[axis]) < self.dead_zone:
-            self.axis[axis] = 0.
+            self.axis[axis] = 0
 
 
 class Controller():
@@ -48,18 +47,18 @@ class Controller():
         self.R3L3 = Axis()
 
     def printButtons(self):
-        print "x", self.X
-        print "SQ", self.SQUARE
-        print "CIRCLE", self.CIRCLE
-        print "triangle",  self.TRIANGLE
-        print "l1", self.L1
-        print "r1", self.R1
+        print("x", self.X)
+        print("SQ", self.SQUARE)
+        print("CIRCLE", self.CIRCLE)
+        print("triangle",  self.TRIANGLE)
+        print("l1", self.L1)
+        print("r1", self.R1)
 
     def printHats(self):
-        print "up", self.UP
-        print "down", self.DOWN
-        print "right", self.RIGHT
-        print "left", self.LEFT
+        print("up", self.UP)
+        print("down", self.DOWN)
+        print("right", self.RIGHT)
+        print("left", self.LEFT)
 
     def resetButtons(self):
         self.X = False
@@ -90,32 +89,53 @@ class myGui(GridLayout):
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.controller = Controller()
+        Clock.schedule_interval(self.sendAxis, 0.2)
+        Clock.schedule_interval(self.pullValues, 0.8)
+        self.master = mavutil.mavlink_connection('udp:192.168.2.1:14550')
+        self.master.wait_heartbeat()
+
+    def modeChange(self, modeName):
+        print("** Mode changed to: {} **".format(modeName))
+        mode_id = self.master.mode_mapping()[modeName]
+        self.master.set_mode(mode_id)
+        # Change the mode to 'modeName'
+
+    def armVehicle(self):
+        self.master.mav.command_long_send(
+            self.master.target_system,
+            self.master.target_component,
+            mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
+            0,
+            1, 0, 0, 0, 0, 0, 0)
+
+    def disarmVehicle(self):
+        self.master.mav.command_long_send(
+            self.master.target_system,
+            self.master.target_component,
+            mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
+            0,
+            0, 0, 0, 0, 0, 0, 0)
+
     def on_joy_axis(self, win, stickid, axisid, value):
-        if(axisid == 0):
-            self.controller.LEFT_AXIS.updateAxis("X", value, True)
 
         if(axisid == 1):
-            self.controller.LEFT_AXIS.updateAxis("Y", value, True)
+            self.controller.LEFT_AXIS.updateAxis("Y", value, range=32767.0, offset=50)
 
         if (axisid == 3):
-            self.controller.R3L3.updateAxis("X", value, range=32767.0*2, offset=50)
+            self.controller.RIGHT_AXIS.updateAxis("X", value, range=32767.0, offset=50)
 
         if (axisid == 4):
-            self.controller.R3L3.updateAxis("Y", value, range=32767.0*2, offset=50)
-
-        if (axisid == 5):
-            self.controller.RIGHT_AXIS.updateAxis("Y", value, True)
-
-        if (axisid == 2):
-            self.controller.RIGHT_AXIS.updateAxis("X", value)
+            self.controller.RIGHT_AXIS.updateAxis("Y", value, range=32767.0, offset=50)
 
 
     def on_joy_button_down(self, win, stickid, buttonid):
         self.controller.resetButtons()
         if buttonid == 0:
             self.controller.SQUARE = True
+            self.armVehicle()
         if buttonid == 1:
             self.controller.X = True
+            self.disarmVehicle()
         if buttonid == 2:
             self.controller.CIRCLE = True
         if buttonid == 3:
@@ -162,6 +182,19 @@ class myGui(GridLayout):
         if(keycode[1] == 'left'):
             self.ids.relative.ids.anchor1.ids.anchor2.rotation.angle += 1
 
+    def sendAxis(self, *args):
+        self.master.mav.heartbeat_send(6, 8, 192, 0, 4, 3)
+        print("(",self.controller.RIGHT_AXIS.axis['Y'],",",self.controller.LEFT_AXIS.axis['X'],",",self.controller.LEFT_AXIS.axis['Y'],")")
+        self.master.mav.manual_control_send(self.master.target_system, self.controller.RIGHT_AXIS.axis['Y'], 0, self.controller.LEFT_AXIS.axis['Y'], self.controller.LEFT_AXIS.axis['X'], 1)
+
+    def pullValues(self, *args):
+        msg = self.master.recv_match().to_dict()
+        if msg.type == 'SCALED_PRESSURE':
+            self.tempLabel = msg
+        if msg.type == 'SCALED_TEMPERATURE':
+            self.barLabel = msg
+
+
 class GuiTestApp(App):
     angle = NumericProperty(0)
 
@@ -172,5 +205,7 @@ class GuiTestApp(App):
     def update_angle(self, dt, *args):
         self.angle += dt * 100
 
-if __name__=="__main__":
+
+
+if __name__== "__main__":
     GuiTestApp().run()
