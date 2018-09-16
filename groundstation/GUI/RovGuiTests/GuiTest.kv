@@ -98,7 +98,7 @@
                 Rectangle:
                     size: self.size
                     pos: self.pos
-            pos_hint:{"x":0.867,"y":0.45}
+            pos_hint:{"x":0.867,"y":0.55}
             size_hint : 0.13,0.09
             rows:2
             Label:
@@ -119,11 +119,33 @@
                 Rectangle:
                     size: self.size
                     pos: self.pos
-            pos_hint:{"x":0.867,"y":0.2}
+            pos_hint:{"x":0.867,"y":0.35}
             size_hint : 0.13,0.09
             rows:2
             Label:
-                text: "Basinc (Bar)"
+                text: "Kontrolcu Sicakligi (Celsius)"
+                font_name: 'Roboto-BoldCondensedItalic.ttf'
+                size_hint_y: 0.02
+            Label:
+                text: root.konttempLabel
+                font_name: 'Roboto-Black.ttf'
+                size_hint_y: 0.06
+                font_size: 24
+
+        BoxLayout:
+            padding : 5
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgba:  0.95,0.95,0.95,.1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            pos_hint:{"x":0.867,"y":0.15}
+            size_hint : 0.13,0.09
+            rows:2
+            Label:
+                text: "Basinc (mBar)"
                 font_name: 'Roboto-BoldCondensedItalic.ttf'
                 size_hint_y: 0.02
             Label:
@@ -146,7 +168,7 @@
                 canvas.before:
                     PushMatrix
                     Rotate:
-                        angle: app.angle
+                        angle: root.angle
                         origin: self.center
                 canvas.after:
                     PopMatrix

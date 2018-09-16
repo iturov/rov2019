@@ -77,8 +77,10 @@ class Controller():
 
 class myGui(GridLayout):
 
+    angle = NumericProperty(0)
     tempLabel = StringProperty('23')
     barLabel = StringProperty('1.2')
+    konttempLabel = StringProperty('23')
 
     def __init__(self, **kwargs):
         super(myGui, self).__init__(**kwargs)
@@ -90,7 +92,7 @@ class myGui(GridLayout):
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
         self.controller = Controller()
         Clock.schedule_interval(self.sendAxis, 0.2)
-        Clock.schedule_interval(self.pullValues, 0.8)
+        Clock.schedule_interval(self.pullValues, 0.02)
         self.master = mavutil.mavlink_connection('udp:192.168.2.1:14550')
         self.master.wait_heartbeat()
 
@@ -107,6 +109,7 @@ class myGui(GridLayout):
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
             0,
             1, 0, 0, 0, 0, 0, 0)
+        print('Vehicle Armed')
 
     def disarmVehicle(self):
         self.master.mav.command_long_send(
@@ -115,11 +118,13 @@ class myGui(GridLayout):
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
             0,
             0, 0, 0, 0, 0, 0, 0)
+        print('Vehicle Disarmed')
 
     def on_joy_axis(self, win, stickid, axisid, value):
 
         if(axisid == 1):
             self.controller.LEFT_AXIS.updateAxis("Y", value, range=32767.0, offset=50)
+            print('sa')
 
         if (axisid == 3):
             self.controller.RIGHT_AXIS.updateAxis("X", value, range=32767.0, offset=50)
@@ -184,26 +189,23 @@ class myGui(GridLayout):
 
     def sendAxis(self, *args):
         self.master.mav.heartbeat_send(6, 8, 192, 0, 4, 3)
-        print("(",self.controller.RIGHT_AXIS.axis['Y'],",",self.controller.LEFT_AXIS.axis['X'],",",self.controller.LEFT_AXIS.axis['Y'],")")
-        self.master.mav.manual_control_send(self.master.target_system, self.controller.RIGHT_AXIS.axis['Y'], 0, self.controller.LEFT_AXIS.axis['Y'], self.controller.LEFT_AXIS.axis['X'], 1)
+        self.master.mav.manual_control_send(self.master.target_system, -(int(self.controller.LEFT_AXIS.axis['Y'])-50), 0, int(500 + int(self.controller.RIGHT_AXIS.axis['Y'])/2)-25, int(self.controller.RIGHT_AXIS.axis['X'])-50, 1)
 
     def pullValues(self, *args):
-        msg = self.master.recv_match().to_dict()
-        if msg.type == 'SCALED_PRESSURE':
-            self.tempLabel = msg
-        if msg.type == 'SCALED_TEMPERATURE':
-            self.barLabel = msg
-
+        msg = self.master.recv_match()
+        if msg.get_type() == 'SCALED_PRESSURE':
+            self.barLabel = str(int(msg.press_abs))
+            self.konttempLabel = str(msg.temperature/100)
+        if msg.get_type() == 'SCALED_PRESSURE2':
+            self.tempLabel = str(msg.temperature/100)
+        if msg.get_type() == 'SCALED_IMU2':
+            print(msg)
 
 class GuiTestApp(App):
-    angle = NumericProperty(0)
 
     def build(self):
-        Clock.schedule_interval(self.update_angle, 0)
         return myGui()
 
-    def update_angle(self, dt, *args):
-        self.angle += dt * 100
 
 
 

@@ -12,12 +12,15 @@ def modeChange(master, modeName):
     # Change the mode to 'modeName'
 
 def rovMove(master, xVelo, yVelo, zVelo):
-    master.mav.manual_control_send(master.target_system, xVelo, yVelo, zVelo,0,1)
+    master.mav.manual_control_send(master.target_system, xVelo, 0, yVelo,zVelo,1)
 
 def readInfo(master, msgType):
     # msgType should be string
-    msg = master.recv_match().to_dict()
-    if msg.type == msgType:
+    msg = master.recv_match()
+    if not msg:
+        return "0"
+
+    if msg.get_type() == msgType:
         return msg
 
 # Starts Connection
@@ -38,7 +41,10 @@ while True:
     # We should send heartbeats at most 1 second interval, less is doing fine.
     master.mav.heartbeat_send(6,8,192,0,4,3)
     # Set the velocity for axis (x,y,z) (Normally limits of axis are from -1000 to 1000 but z axis is working on 0 to 1000 interval so 500 is the middle value)
-    rovMove(master, -50,0,500)
+    rovMove(master, 0, 500, 0)
     # Print the pressure values
-    print(readInfo(master, "SCALED_PRESSURE"))
-    time.sleep(.1)
+    msg = master.recv_match()
+    if not msg:
+        continue
+    if msg.get_type() == 'SCALED_IMU2':
+        print(msg)
