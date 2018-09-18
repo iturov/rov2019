@@ -1,0 +1,116 @@
+[AccordionItemTitle@Label]:
+    text: ctx.title
+    canvas.before:
+        Color:
+            rgba: 0.6, 0.6, 0.6 , 0.7
+        BorderImage:
+            source:
+                ctx.item.background_normal                         if ctx.item.collapse                         else ctx.item.background_selected
+            pos: self.pos
+            size: self.size
+        PushMatrix
+        Translate:
+            xy: self.center_x, self.center_y
+        Rotate:
+            angle: 90 if ctx.item.orientation == 'horizontal' else 0
+            axis: 0, 0, 1
+        Translate:
+            xy: -self.center_x, -self.center_y
+    canvas.after:
+        PopMatrix
+
+<myGui>:
+    rows: 1
+    spacing: 5
+    canvas:
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            source: 'bg1.png'
+    BoxLayout:
+        size_hint: 1,1
+        orientation: 'horizontal'
+        padding: 5
+        canvas:
+            Color:
+                rgba: 0.95,0.95,0.95,.1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        BoxLayout:
+            padding : 5
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgba:  0.95,0.95,0.95,.1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            rows:2
+            Label:
+                text: "Sicaklik (Celsius)"
+                font_name: 'Roboto-BoldCondensedItalic.ttf'
+                size_hint_y: 0.02
+            Label:
+                text: root.tempLabel
+                font_name: 'Roboto-Black.ttf'
+                size_hint_y: 0.06
+                font_size: 24
+        BoxLayout:
+            padding : 5
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgba:  0.95,0.95,0.95,.1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            rows:2
+            Label:
+                text: "Derinlik (cm )"
+                font_name: 'Roboto-BoldCondensedItalic.ttf'
+                size_hint_y: 0.02
+            Label:
+                text: root.depthLabel
+                font_name: 'Roboto-Black.ttf'
+                size_hint_y: 0.06
+                font_size: 24
+        BoxLayout:
+            padding : 5
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgba:  0.95,0.95,0.95,.1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            rows:2
+            Label:
+                text: "Kontrolcu Sicakligi (Celsius)"
+                font_name: 'Roboto-BoldCondensedItalic.ttf'
+                size_hint_y: 0.02
+            Label:
+                text: root.konttempLabel
+                font_name: 'Roboto-Black.ttf'
+                size_hint_y: 0.06
+                font_size: 24
+
+        BoxLayout:
+            padding : 5
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgba:  0.95,0.95,0.95,.1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            rows:2
+            Label:
+                text: "Basinc (mBar)"
+                font_name: 'Roboto-BoldCondensedItalic.ttf'
+                size_hint_y: 0.02
+            Label:
+                text: root.barLabel
+                font_name: 'Roboto-Black.ttf'
+                size_hint_y: 0.06
+                font_size: 24
