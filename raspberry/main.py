@@ -18,6 +18,7 @@ from watchdog import * # Import system watchdog
 from network.serial_comm import *
 from network.tcp_comm import *
 from multiprocessing import Process
+import exceptions
 
 # loop1
 def systemLoop(): # Check system state every minute
@@ -37,13 +38,13 @@ def serialLoop():
             try:
                 tcpClient.failure(problem = coming_array[0])
             except:
-                error("Error while sending data to groundstation")
+                error(exceptions.tcp_send)
         else:
             try:
                 tcpClient.send(temp = coming_array[0],
                                pressure = coming_array[1])
             except:
-                error("Error while sending data to groundstation")
+                error(exceptions.tcp_send)
 
 # loop3
 def tcpLoop():
@@ -66,7 +67,7 @@ def tcpLoop():
                 elif(coming_array[3] == "KILL_CONNECTION"):
                     tcpClient.kill()
             except:
-                error("Error while reading coming data from ground station")
+                error(exceptions.tcp_recv)
         else
             try:
                 stmServer.send(x = coming_array[3],
@@ -77,7 +78,7 @@ def tcpLoop():
                                yaw = coming_array[8],
                                gripper = coming_array[9])
             except:
-                error("Error while sending data to STM32")
+                error(exceptions.serial_send)
 
 # System Started
 success(bold("System Started"))
