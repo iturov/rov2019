@@ -1,5 +1,24 @@
-<Widget>:
-    font_name: 'Roboto-Condensed.ttf'
+[AccordionItemTitle@Label]:
+    text: ctx.title
+    canvas.before:
+        Color:
+            rgba: 0.6, 0.6, 0.6 , 0.7
+        BorderImage:
+            source:
+                ctx.item.background_normal                         if ctx.item.collapse                         else ctx.item.background_selected
+            pos: self.pos
+            size: self.size
+        PushMatrix
+        Translate:
+            xy: self.center_x, self.center_y
+        Rotate:
+            angle: 90 if ctx.item.orientation == 'horizontal' else 0
+            axis: 0, 0, 1
+        Translate:
+            xy: -self.center_x, -self.center_y
+    canvas.after:
+        PopMatrix
+
 <myGui>:
     rows: 2
     spacing: 5
@@ -15,95 +34,41 @@
         spacing: 5
         cols:2
         AnchorLayout:
-            pos_hint:{"x":0.0035,"y":0.9}
-            size_hint : 0.025,0.08
-            anchor_x : 'center'
-            anchor_y : 'center'
-            Button:
-                text: "**"
-                text_color: 1,1,1,1
-                background_color: 0.45,0.45,0.45,0.9
-        AnchorLayout:
-            pos_hint:{"x":0.0035,"y":0.7}
-            size_hint : 0.025,0.08
-            anchor_x : 'center'
-            anchor_y : 'center'
-            Button:
-                text: "**"
-                text_color: 1,1,1,1
-                background_color: 0.45,0.45,0.45,0.9
-        AnchorLayout:
-            pos_hint:{"x":0.0035,"y":0.5}
-            size_hint : 0.025,0.08
-            anchor_x : 'center'
-            anchor_y : 'center'
-            Button:
-                text: "**"
-                text_color: 1,1,1,1
-                background_color: 0.45,0.45,0.45,0.9
-        AnchorLayout:
-            pos_hint:{"x":0.0035,"y":0.3}
-            size_hint : 0.025,0.08
-            anchor_x : 'center'
-            anchor_y : 'center'
-            Button:
-                text: "**"
-                text_color: 1,1,1,1
-                background_color: 0.45,0.45,0.45,0.9
-        AnchorLayout:
-            pos_hint:{"x":0.0035,"y":0.1}
-            size_hint : 0.025,0.08
-            anchor_x : 'center'
-            anchor_y : 'center'
-            Button:
-                text: "**"
-                text_color: 1,1,1,1
-                background_color: 0.45,0.45,0.45,0.9
-        AnchorLayout:
-            pos_hint:{"x":0.0035,"y":0.8}
-            size_hint : 0.025,0.08
-            anchor_x : 'center'
-            anchor_y : 'center'
-            Button:
-                text: "<<"
-                text_color: 0,0,0,1
-                background_color: 0.95,0.95,0.95,0.4
-        AnchorLayout:
-            pos_hint:{"x":0.0035,"y":0.6}
-            size_hint : 0.025,0.08
-            anchor_x : 'center'
-            anchor_y : 'center'
-            Button:
-                text: "<<"
-                text_color: 0,0,0,1
-                background_color: 0.95,0.95,0.95,0.4
-        AnchorLayout:
-            pos_hint:{"x":0.0035,"y":0.4}
-            size_hint : 0.025,0.08
-            anchor_x : 'center'
-            anchor_y : 'center'
-            Button:
-                text: "<<"
-                text_color: 0,0,0,1
-                background_color: 0.95,0.95,0.95,0.4
-        AnchorLayout:
-            pos_hint:{"x":0.0035,"y":0.2}
-            size_hint : 0.025,0.08
-            anchor_x : 'center'
-            anchor_y : 'center'
-            Button:
-                text: "<<"
-                text_color: 0,0,0,1
-                background_color: 0.95,0.95,0.95,0.4
-        AnchorLayout:
-            pos_hint:{"x":0.0035,"y":0}
-            size_hint : 0.025,0.08
-            anchor_x : 'center'
-            anchor_y : 'center'
-            Button:
-                text: "<<"
-                text_color: 0,0,0,1
-                background_color: 0.95,0.95,0.95,.4
+            canvas:
+                Color:
+                    rgba: 0.1,0.7,0.1,0
+                Rectangle:
+                    size:self.size
+                    pos:self.pos
+            size_hint:0.028,.3
+            pos_hint:{"x":0.002,"y":0.65}
+            Accordion:
+                orientation:'vertical'
+                AccordionItem:
+                    background_color: 0.3,0.3,0.3,0.4
+                    title:'mod'
+                    Button:
+                        text:'1'
+                    Button:
+                        text:'2'
+                AccordionItem:
+                    title:'<<'
+                    Button:
+                        text:'1'
+                    Button:
+                        text:'2'
+                AccordionItem:
+                    title:'<<'
+                    Button:
+                        text:'1'
+                    Button:
+                        text:'2'
+                AccordionItem:
+                    title:'<<'
+                    Button:
+                        text:'1'
+                    Button:
+                        text:'2'
         Camera:
             pos_hint:{"x":-0.05,"y":0}
             id: Cam0
@@ -133,7 +98,7 @@
                 Rectangle:
                     size: self.size
                     pos: self.pos
-            pos_hint:{"x":0.867,"y":0.45}
+            pos_hint:{"x":0.867,"y":0.55}
             size_hint : 0.13,0.09
             rows:2
             Label:
@@ -154,11 +119,33 @@
                 Rectangle:
                     size: self.size
                     pos: self.pos
-            pos_hint:{"x":0.867,"y":0.2}
+            pos_hint:{"x":0.867,"y":0.35}
             size_hint : 0.13,0.09
             rows:2
             Label:
-                text: "Basinc (Bar)"
+                text: "Kontrolcu Sicakligi (Celsius)"
+                font_name: 'Roboto-BoldCondensedItalic.ttf'
+                size_hint_y: 0.02
+            Label:
+                text: root.konttempLabel
+                font_name: 'Roboto-Black.ttf'
+                size_hint_y: 0.06
+                font_size: 24
+
+        BoxLayout:
+            padding : 5
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgba:  0.95,0.95,0.95,.1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            pos_hint:{"x":0.867,"y":0.15}
+            size_hint : 0.13,0.09
+            rows:2
+            Label:
+                text: "Basinc (mBar)"
                 font_name: 'Roboto-BoldCondensedItalic.ttf'
                 size_hint_y: 0.02
             Label:
@@ -181,7 +168,7 @@
                 canvas.before:
                     PushMatrix
                     Rotate:
-                        angle: app.angle
+                        angle: root.angle
                         origin: self.center
                 canvas.after:
                     PopMatrix

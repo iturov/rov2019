@@ -8,7 +8,7 @@ from kivy.clock import Clock
 from pymavlink import mavutil
 
 Window.clearcolor = (.15, .15, .15, 1)
-Window.size = (1366, 768)
+Window.size = (1360, 100)
 # Window.fullscreen = 'auto'
 
 
@@ -81,6 +81,8 @@ class myGui(GridLayout):
     tempLabel = StringProperty('23')
     barLabel = StringProperty('1.2')
     konttempLabel = StringProperty('23')
+    depthLabel = StringProperty('0')
+    geciciBasinc = NumericProperty('0')
 
     def __init__(self, **kwargs):
         super(myGui, self).__init__(**kwargs)
@@ -152,6 +154,7 @@ class myGui(GridLayout):
         if buttonid == 6:
             print('BACK')
         if buttonid == 7:
+            self.geciciBasinc = float(self.barLabel)
             print('START')
 
         self.controller.printButtons()
@@ -193,13 +196,17 @@ class myGui(GridLayout):
 
     def pullValues(self, *args):
         msg = self.master.recv_match()
-        if msg.get_type() == 'SCALED_PRESSURE':
-            self.barLabel = str(int(msg.press_abs))
+        if not msg:
+            print("hata")
+        elif msg.get_type() == 'SCALED_PRESSURE':
+            self.barLabel = str(float(msg.press_abs))
             self.konttempLabel = str(msg.temperature/100)
-        if msg.get_type() == 'SCALED_PRESSURE2':
+        elif msg.get_type() == 'SCALED_PRESSURE2':
             self.tempLabel = str(msg.temperature/100)
-        if msg.get_type() == 'SCALED_IMU2':
+        elif msg.get_type() == 'SCALED_IMU2':
             print(msg)
+
+        self.depthLabel = str((float(self.barLabel) - self.geciciBasinc)*1.02)
 
 class GuiTestApp(App):
 
